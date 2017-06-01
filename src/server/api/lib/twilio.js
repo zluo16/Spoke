@@ -186,11 +186,28 @@ async function handleIncomingMessage(message) {
   return part.id
 }
 
+async function inviteTexterToCampaign(message){
+  let baseUrl = 'http://base'
+  if (typeof window !== 'undefined')
+    baseUrl = window.location.origin
+
+  const joinUrl = `${baseUrl}/${organizationId}/join`
+  
+  return
+    twilio.messages.create({
+      to: message.contact_number,
+      from: message.user_number,
+      body: 'Hey, MoveOn.Org has invited you to a campaign, click the link to signup and start texting' + joinUrl,
+    }
+}
+
+
 export default {
   convertMessagePartsToMessage,
   findNewCell,
   rentNewCell,
   sendMessage,
   handleDeliveryReport,
-  handleIncomingMessage
+  handleIncomingMessage,
+  inviteTexterToCampaign
 }

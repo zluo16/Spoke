@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import WarningIcon from 'material-ui/svg-icons/alert/warning'
 import DoneIcon from 'material-ui/svg-icons/action/done'
 import Avatar from 'material-ui/Avatar'
@@ -52,14 +52,15 @@ const campaignInfoFragment = `
   }
 `
 
-class AdminCampaignEdit extends React.Component {
+class AdminCampaignEdit extends Component {
   constructor(props) {
     super(props)
     const isNew = props.location.query.new
     this.state = {
       expandedSection: isNew ? 0 : null,
       campaignFormValues: props.campaignData.campaign,
-      startingCampaign: false
+      startingCampaign: false,
+      inviteTexters: false
     }
   }
 
@@ -369,7 +370,7 @@ class AdminCampaignEdit extends React.Component {
             ...theme.layouts.multiColumn.flexColumn
           }}
         >
-          {isCompleted ? 'Your campaign is all good to go! >>>>>>>>>' : 'You need to complete all the sections below before you can start this campaign'}
+          {isCompleted ? 'Your campaign is all good to go!' : 'You need to complete all the sections below before you can start this campaign'}
         </div>
         <div>
           { this.props.campaignData.campaign.isArchived ? (
@@ -389,7 +390,8 @@ class AdminCampaignEdit extends React.Component {
             disabled={!isCompleted}
             onTouchTap={async () => {
               this.setState({
-                startingCampaign: true
+                startingCampaign: true,
+                inviteTexters: true
               })
               await this.props.mutations.startCampaign(this.props.campaignData.campaign.id)
               this.setState({
