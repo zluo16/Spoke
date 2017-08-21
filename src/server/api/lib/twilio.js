@@ -35,17 +35,23 @@ async function convertMessagePartsToMessage(messageParts) {
     service: defaultService
   })
 
-  return new Message({
-    contact_number: contactNumber,
-    user_number: userNumber,
-    is_from_contact: true,
-    text,
-    service_response: JSON.stringify(serviceMessages),
-    service_id: serviceMessages[0].service_id,
-    assignment_id: lastMessage.assignment_id,
-    service: defaultService,
-    send_status: 'DELIVERED'
-  })
+  let updateMessage = r.knex('message')
+    .where({
+      contact_number: contactNumber,
+      user_number: userNumber,
+      is_from_contact: false,
+      send_status: 'SENDING'
+    })
+    .update({
+      text,
+      service_response: JSON.stringify(serviceMessages),
+      service_id: serviceMessages[0].service_id,
+      assignment_id: lastMessage.assignment_id,
+      service: defaultService,
+      'status': 'DELIVERED',
+    })
+
+    return updateMessage
 }
 
 async function findNewCell() {
