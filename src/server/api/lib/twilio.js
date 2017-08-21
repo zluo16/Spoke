@@ -34,16 +34,17 @@ async function convertMessagePartsToMessage(messageParts) {
     contactNumber,
     service: defaultService
   })
-
+  console.log( 'message id:', firstPart.id );
   let updateMessage = r.knex('message')
     .where({
+      id: firstPart.id,
+      text,
       contact_number: contactNumber,
       user_number: userNumber,
       is_from_contact: false,
       send_status: 'SENDING'
     })
     .update({
-      text,
       service_response: JSON.stringify(serviceMessages),
       service_id: serviceMessages[0].service_id,
       assignment_id: lastMessage.assignment_id,

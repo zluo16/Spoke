@@ -612,6 +612,28 @@ const rootMutations = {
 
       await messageInstance.save()
 
+      console.log('message:', messageInstance);
+
+      let countMessages = r.knex('message')
+        .count('id')
+        .where({
+          text: messageInstance.text,
+          contact_number: contactNumber,
+          is_from_contact: false,
+          assignment_id: messageInstance.assignment_id
+        })
+
+      if(countMessages > 1){
+        r.knex('message')
+          .where({
+            text: messageInstance.text,
+            contact_number: contactNumber,
+            assignment_id: messageInstace.assignment_id,
+            send_status: 'SENDING',
+            is_from_contact: false
+          }).del()
+      }
+
       contact.message_status = 'messaged'
       await contact.save()
 
